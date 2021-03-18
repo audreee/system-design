@@ -13,7 +13,7 @@ pool.connect(function (err, client, done) {
     console.error(err);
     return;
   }
-  app.listen(3000, () => {
-    console.log('listening on 3000')
-  });
+  console.log('postgresSQL is connected');
 });
+
+module.exports = pool;

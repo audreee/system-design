@@ -1,4 +1,5 @@
-const { Pool, Client } = require('pg');
+// eslint-disable-next-line import/no-extraneous-dependencies
+const { Pool } = require('pg');
 
 const pool = new Pool({
   user: 'audreesteinberg',
@@ -6,9 +7,10 @@ const pool = new Pool({
   database: 'sdc',
   password: '',
   port: 5432,
-})
+});
 
-pool.connect(function (err, client, done) {
+// eslint-disable-next-line no-unused-vars
+pool.connect((err, done) => {
   if (err) {
     console.error(err);
     return;

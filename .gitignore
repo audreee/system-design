@@ -1,6 +1,11 @@
 .DS_Store
 node_modules
-data/answers_photos.csv
+data/clean/clean-photos.csv
+data/clean/clean-questions.csv
+data/clean/clean-answers.csv
 data/answers.csv
 data/questions.csv
-data/clean-questions.csv
+data/answers_photos.csv
+partial/someanswers.csv
+partial/somephotos.csv
+partial/somequestions.csv

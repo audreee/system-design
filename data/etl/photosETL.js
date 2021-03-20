@@ -4,7 +4,7 @@ const path = require('path');
 
 const validatePhotos = require('./validatePhotos.js');
 
-const readStream = fs.createReadStream(path.join(__dirname, '../partial/somephotos.csv'));
+const readStream = fs.createReadStream(path.join(__dirname, '../answers_photos.csv'));
 const writeStream = fs.createWriteStream(path.join(__dirname, '../clean/clean-photos.csv'), { encoding: 'utf8' });
 
 const rl = readline.createInterface({

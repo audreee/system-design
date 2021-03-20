@@ -10,8 +10,8 @@ const validateQuestionsAndAnswers = (line, callback) => {
   const reported = columns[6];
   const helpful = columns[7];
 
-  if (Number.isNaN(Number(id))) { return false; }
-  if (Number.isNaN(Number(product_id))) { return false; }
+  if (!id || Number.isNaN(Number(id))) { return false; }
+  if (!product_id || Number.isNaN(Number(product_id))) { return false; }
   if (typeof body !== 'string' || body.length > 1002) { return false; }
   if (!validateDate(date_written)) { return false; }
   if (typeof name !== 'string' || name.length > 62) { return false; }

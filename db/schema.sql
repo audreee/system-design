@@ -1,6 +1,5 @@
 CREATE TABLE questions (
   id INTEGER,
-  -- csv_import_id INTEGER NOT NULL,
   product_id INTEGER UNIQUE NOT NULL,
   body VARCHAR(1000) NOT NULL,
   date_written DATE NOT NULL,
@@ -12,7 +11,6 @@ CREATE TABLE questions (
 
 CREATE TABLE answers (
   id INTEGER UNIQUE NOT NULL,
-  -- csv_import_id INTEGER NOT NULL,
   question_id INTEGER NOT NULL,
   body VARCHAR(1000) NOT NULL,
   date_written DATE NOT NULL,

@@ -30,6 +30,9 @@ ADD FOREIGN KEY (answer_id)
 REFERENCES answers (id)
 ON DELETE CASCADE;
 
+CREATE INDEX product_name ON questions (product_id);
+
+
 -- TEST FOR DUPLICATES
 -- SELECT csv_import_id, COUNT( csv_import_id ) FROM questions GROUP BY csv_import_id order BY count DESC;
 

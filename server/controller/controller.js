@@ -1,3 +1,14 @@
 const db = require('../../db/models/models.js');
 
-// this file handles invoking queries exported from the model and sending the appropriate resulting server responses
+module.exports = {
+  getQuestions: (req, res) => {
+    db.getQuestionsByHelpfulness(req.query.product_id, (err, data) => {
+      if (err) {
+        console.error(err);
+        res.sendStatus(400);
+      } else {
+        res.send(data.rows);
+      }
+    });
+  },
+};

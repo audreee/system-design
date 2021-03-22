@@ -15,12 +15,12 @@ module.exports = {
   },
 
   getAnswersByHelpfulness: (questionId, callback) => {
-    let query = format('SELECT answers.id, question_id, body, date_written, answerer_name, answerer_email, reported, helpful, photos.id AS photo_id, photo  FROM answers LEFT JOIN photos ON answers.id = photos.answer_id WHERE answers.id IN (SELECT id FROM answers WHERE question_id = %L AND reported IS false) ORDER BY helpful DESC', questionId);
+    let query = format('SELECT answers.id, question_id, body, date_written, answerer_name, answerer_email, reported, helpful, ARRAY_AGG(photo) as photos FROM answers LEFT JOIN photos ON answers.id = photos.answer_id WHERE answers.id IN (SELECT id FROM answers WHERE question_id = %L AND reported IS false) GROUP BY answers.id, question_id, body, date_written, answerer_name, answerer_email, reported, helpful ORDER BY helpful DESC', questionId);
     db.query(query, callback);
   },
 
   getAnswersByNewest: (questionId, callback) => {
-    let query = format('SELECT answers.id, question_id, body, date_written, answerer_name, answerer_email, reported, helpful, ARRAY_AGG(photo) as photos FROM answers LEFT JOIN photos ON answers.id = photos.answer_id WHERE answers.id IN (SELECT id FROM answers WHERE question_id = 28 AND reported IS false) GROUP BY answers.id, question_id, body, date_written, answerer_name, answerer_email, reported, helpful ORDER BY date_written', questionId);
+    let query = format('SELECT answers.id, question_id, body, date_written, answerer_name, answerer_email, reported, helpful, ARRAY_AGG(photo) as photos FROM answers LEFT JOIN photos ON answers.id = photos.answer_id WHERE answers.id IN (SELECT id FROM answers WHERE question_id = %L AND reported IS false) GROUP BY answers.id, question_id, body, date_written, answerer_name, answerer_email, reported, helpful ORDER BY date_written', questionId);
     db.query(query, callback);
   },
 
@@ -29,26 +29,28 @@ module.exports = {
     db.query(query, callback);
   },
 
-  addAnswer: (params, callback) => {
-    let photosLinks = params[4];
-    let query = format('INSERT INTO answers(body, answerer_name, answerer_email, question_id) VALUES (%L, %L, %L, %L) RETURNING id', params[0], params[1], params[2], params[3], params[4]);
+  addAnswer: (answerInfo, questionId, callback) => {
+    let photoLinks = answerInfo[3];
+    let query = format('INSERT INTO answers(body, answerer_name, answerer_email, question_id) VALUES (%L, %L, %L, %L) RETURNING id', answerInfo[0], answerInfo[1], answerInfo[2], questionId);
     db.query(query, (err, result) => {
       if (err) {
         callback(err, null);
-      } else if (photos.length === 0) {
+      } else if (photoLinks.length === 0) {
         callback(null, result);
-      } else {
-        console.log('result rows should show answerId ', result.rows[0]);
-        let answerId = rows[0];
+      } else if (photoLinks.length > 0) {
+        console.log('generated answerId ', result.rows[0].id);
+        let answerId = result.rows[0].id;
+        console.log("photolinks ", photoLinks.length)
         Promise.all(photoLinks.map((photo) => {
-          let insertPhotosQuery = format('INSERT INTO photos (answer_id, photo)VALUES (%L, %L)', answerId, photo);
+          console.log("photo ", photo)
+          let insertPhotosQuery = format('INSERT INTO photos (answer_id, photo) VALUES (%L, %L)', answerId, photo);
           return db.query(insertPhotosQuery);
         }))
-          .then((result) => {
-            callback(null, result);
+          .then((results) => {
+            callback(null, results);
           })
           .catch((err) => {
-            callback(err, result);
+            callback(err, null);
           });
       }
     });

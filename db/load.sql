@@ -58,7 +58,7 @@ ALTER TABLE questions ALTER COLUMN id SET DEFAULT nextval('q_seq');
 
 CREATE SEQUENCE a_seq;
 select setval('a_seq', (select max(id)+1 from answers), false);
-ALTER TABLE questions ALTER COLUMN id SET DEFAULT nextval('a_seq');
+ALTER TABLE answers ALTER COLUMN id SET DEFAULT nextval('a_seq');
 
 CREATE SEQUENCE p_seq;
 select setval('p_seq', (select max(id)+1 from photos), false);

@@ -55,6 +55,26 @@ module.exports = {
       }
     });
   },
+
+  updateHelpfulQuestion: (questionId, callback) => {
+    let query = format('UPDATE questions SET helpful = helpful + 1 WHERE id = %L', questionId);
+    db.query(query, callback);
+  },
+
+  updateHelpfulAnswer: (answerId, callback) => {
+    let query = format('UPDATE answers SET helpful = helpful + 1 WHERE id = %L', answerId);
+    db.query(query, callback);
+  },
+
+  updateReportedQuestion: (questionId, callback) => {
+    let query = format('UPDATE questions SET reported = true WHERE id = %L', questionId);
+    db.query(query, callback);
+  },
+
+  updateReportedAnswer: (answerId, callback) => {
+    let query = format('UPDATE answers SET reported = true WHERE id = %L', answerId);
+    db.query(query, callback);
+  },
 };
 
 // get photos for answers for a given question

@@ -1,6 +1,6 @@
 CREATE TABLE questions (
   id INTEGER,
-  product_id INTEGER UNIQUE NOT NULL,
+  product_id INTEGER PRIMARY KEY,
   body VARCHAR(1000) NOT NULL,
   date_written DATE NOT NULL DEFAULT current_date,
   asker_name VARCHAR(60) NOT NULL,
@@ -10,7 +10,7 @@ CREATE TABLE questions (
 );
 
 CREATE TABLE answers (
-  id INTEGER UNIQUE NOT NULL,
+  id INTEGER PRIMARY KEY,
   question_id INTEGER NOT NULL,
   body VARCHAR(1000) NOT NULL,
   date_written DATE NOT NULL DEFAULT current_date,

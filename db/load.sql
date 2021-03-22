@@ -31,9 +31,9 @@ WHERE  answers.id = photos.answer_id
 
 -- Create indexes to optimize query execution times:
 CREATE INDEX product_name ON questions (product_id);
-
 CREATE INDEX q_id ON answers(question_id);
 CREATE INDEX a_id ON answers(id);
+CREATE INDEX p_answer_id ON photos (answer_id);
 
 -- ALTER TABLE questions
 -- ALTER COLUMN date_written
@@ -78,3 +78,17 @@ ALTER TABLE photos ALTER COLUMN id SET DEFAULT nextval('p_seq');
 --         ORDER BY  id ) AS row_num
 --         FROM questions ) t
 --         WHERE t.row_num > 1 )
+
+-- INDEXES
+-- CREATE UNIQUE INDEX answer_id ON public.answers USING btree (id)
+-- CREATE INDEX question_id ON public.answers USING btree (question_id)
+-- CREATE INDEX idx_reported_id ON public.answers USING btree (reported, id)
+-- CREATE UNIQUE INDEX answers_pkey ON public.answers USING btree (id)
+
+-- CREATE UNIQUE INDEX id ON public.questions USING btree (id)
+-- CREATE INDEX idx_q_reported ON public.questions USING btree (id, reported)
+-- CREATE UNIQUE INDEX questions_pkey ON public.questions USING btree (id)
+
+-- CREATE UNIQUE INDEX photos_id_key ON public.photos USING btree (id)
+-- CREATE INDEX p_links ON public.photos USING btree (photo)
+-- CREATE INDEX p_answer_id ON photos (answer_id);

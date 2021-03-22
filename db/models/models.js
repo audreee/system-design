@@ -15,9 +15,22 @@ module.exports = {
   },
 
   getAnswersByHelpfulness: (questionId, callback) => {
-    let query = format('SELECT answers.id, question_id, body, date_written, answerer_name, answerer_email, reported, helpful, ARRAY_AGG(photo) as photos FROM answers LEFT JOIN photos ON answers.id = photos.answer_id WHERE answers.id IN (SELECT id FROM answers WHERE question_id = %L AND reported IS false) GROUP BY answers.id, question_id, body, date_written, answerer_name, answerer_email, reported, helpful ORDER BY helpful DESC', questionId);
+    let query = format('SELECT answers.id, question_id, body, date_written, answerer_name, answerer_email, reported, helpful, ARRAY_AGG(photo) as photos FROM answers LEFT JOIN photos ON answers.id = photos.answer_id WHERE reported IS false AND question_id = %L GROUP BY answers.id ORDER BY helpful DESC', questionId);
     db.query(query, callback);
   },
+
+  // 'SELECT answers.id, question_id, body, date_written, answerer_name, answerer_email, reported, helpful, ARRAY_AGG(photo) as photos FROM answers LEFT JOIN photos ON answers.id = photos.answer_id WHERE reported IS false AND answers.id IN (SELECT id FROM answers WHERE question_id = 20012) GROUP BY answers.id ORDER BY helpful DESC'
+
+
+  // design combo index first on reported and then on question id
+  // design one on first reported and then on answer id
+  // look at compound indexes on grouping/joining
+  // compare hash indexes with non-hash
+  // look at postgres statisical something
+  // make compound indexes that sort on a common field (why sort this every time?)
+  // get it down to 200-ish ms
+  // k6 is easier than artillery
+  // new relic
 
   getAnswersByNewest: (questionId, callback) => {
     let query = format('SELECT answers.id, question_id, body, date_written, answerer_name, answerer_email, reported, helpful, ARRAY_AGG(photo) as photos FROM answers LEFT JOIN photos ON answers.id = photos.answer_id WHERE answers.id IN (SELECT id FROM answers WHERE question_id = %L AND reported IS false) GROUP BY answers.id, question_id, body, date_written, answerer_name, answerer_email, reported, helpful ORDER BY date_written', questionId);
@@ -86,3 +99,5 @@ module.exports = {
 // select * from photos where answer_id in (
 // select answer_id from photos
 // group by answer_id having count(*) > 1
+
+// explain analyze SELECT answers.id, question_id, body, date_written, answerer_name, answerer_email, reported, helpful, ARRAY_AGG(photo) as photos FROM answers LEFT JOIN photos ON answers.id = photos.answer_id WHERE answers.id IN (SELECT id FROM answers WHERE question_id = 5 AND reported IS false) GROUP BY answers.id, question_id, body, date_written, answerer_name, answerer_email, reported, helpful ORDER BY helpful DESC

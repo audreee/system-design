@@ -1,22 +1,32 @@
 const db = require('../connection.js');
+const format = require('pg-format');
 
 // this file handles database queries
 
 module.exports = {
   getQuestionsByHelpfulness: (productId, callback) => {
-    db.query(`SELECT * FROM questions WHERE product_id = ${productId} AND reported IS false ORDER BY helpful DESC`, callback);
+    let query = format('SELECT * FROM questions WHERE product_id = %L AND reported IS false ORDER BY helpful DESC', productId);
+    db.query(query, callback);
   },
 
   getQuestionsByNewest: (productId, callback) => {
-    db.query('SELECT * FROM questions WHERE product_id = (?) AND reported IS false ORDER BY date_written', productId, callback);
+    let query = format('SELECT * FROM questions WHERE product_id = %L AND reported IS false ORDER BY date_written', productId);
+    db.query(query, callback);
   },
 
   getAnswersByHelpfulness: (questionId, callback) => {
-    db.query('SELECT answers.id, question_id, body, date_written, answerer_name, answerer_email, reported, helpful, photos.id, photo  FROM answers LEFT JOIN photos ON answers.id = photos.answer_id WHERE answers.id IN (SELECT id FROM answers WHERE question_id = 1 AND reported IS false) ORDER BY helpful DESC', questionId, callback);
+    let query = format('SELECT answers.id, question_id, body, date_written, answerer_name, answerer_email, reported, helpful, photos.id AS photo_id, photo  FROM answers LEFT JOIN photos ON answers.id = photos.answer_id WHERE answers.id IN (SELECT id FROM answers WHERE question_id = %L AND reported IS false) ORDER BY helpful DESC', questionId);
+    db.query(query, callback);
   },
 
   getAnswersByNewest: (questionId, callback) => {
-    db.query('SELECT answers.id, question_id, body, date_written, answerer_name, answerer_email, reported, helpful, photos.id, photo  FROM answers LEFT JOIN photos ON answers.id = photos.answer_id WHERE answers.id IN (SELECT id FROM answers WHERE question_id = 1 AND reported IS false) ORDER BY date_written', questionId, callback);
+    let query = format('SELECT answers.id, question_id, body, date_written, answerer_name, answerer_email, reported, helpful, photos.id AS photo_id, photo  FROM answers LEFT JOIN photos ON answers.id = photos.answer_id WHERE answers.id IN (SELECT id FROM answers WHERE question_id = %L AND reported IS false) ORDER BY date_written', questionId);
+    db.query(query, callback);
+  },
+
+  addQuestion: (params, callback) => {
+    let query = format('INSERT INTO questions (body, asker_name, asker_email, product_id) VALUES (%L, %L, %L, %L)', params[0], params[1], params[2], params[3]);
+    db.query(query, callback);
   },
 };
 

@@ -34,4 +34,18 @@ module.exports = {
       }
     });
   },
+  addAnswer: (req, res) => {
+    // console.log(req.body);
+    let params = [req.body.body, req.body.name, req.body.email,
+      req.params.question_id, req.body.photos];
+    db.addQuestion(params, (err, data) => {
+      if (err) {
+        console.error(err);
+        res.sendStatus(400);
+      } else {
+        console.log(data);
+        res.sendStatus(201);
+      }
+    });
+  },
 };

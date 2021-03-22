@@ -7,5 +7,6 @@ const questionsAPI = express.Router();
 questionsAPI.get('/qa/questions', controller.getQuestions);
 questionsAPI.get('/qa/questions/:question_id/answers', controller.getAnswers);
 questionsAPI.post('/qa/questions', controller.addQuestion);
+questionsAPI.post('/qa/questions/:question_id/answers', controller.addAnswer);
 
 module.exports.questionsAPI = questionsAPI;

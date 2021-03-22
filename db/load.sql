@@ -32,7 +32,8 @@ WHERE  answers.id = photos.answer_id
 -- Create indexes to optimize query execution times:
 CREATE INDEX product_name ON questions (product_id);
 
-CREATE INDEX question_id ON answers(question_id);
+CREATE INDEX q_id ON answers(question_id);
+CREATE INDEX a_id ON answers(id);
 
 -- ALTER TABLE questions
 -- ALTER COLUMN date_written
@@ -58,6 +59,10 @@ ALTER TABLE questions ALTER COLUMN id SET DEFAULT nextval('q_seq');
 CREATE SEQUENCE a_seq;
 select setval('a_seq', (select max(id)+1 from answers), false);
 ALTER TABLE questions ALTER COLUMN id SET DEFAULT nextval('a_seq');
+
+CREATE SEQUENCE p_seq;
+select setval('p_seq', (select max(id)+1 from photos), false);
+ALTER TABLE photos ALTER COLUMN id SET DEFAULT nextval('p_seq');
 
 
 -- TEST FOR DUPLICATES:

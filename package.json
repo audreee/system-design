@@ -31,6 +31,7 @@
     "pg-format": "^1.0.4"
   },
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "newrelic": "^7.1.3"
   }
 }

@@ -77,11 +77,8 @@ module.exports = {
       } else if (photoLinks.length === 0) {
         callback(null, result);
       } else if (photoLinks.length > 0) {
-        console.log('generated answerId ', result.rows[0].id);
         let answerId = result.rows[0].id;
-        console.log("photolinks ", photoLinks.length)
         Promise.all(photoLinks.map((photo) => {
-          console.log("photo ", photo)
           let insertPhotosQuery = format('INSERT INTO photos (answer_id, photo) VALUES (%L, %L)', answerId, photo);
           return db.query(insertPhotosQuery);
         }))

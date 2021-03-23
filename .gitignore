@@ -11,3 +11,5 @@ partial/somephotos.csv
 partial/somequestions.csv
 todo.txt
 db/models/practice.js
+newrelic.js
+newrelic_agent.log

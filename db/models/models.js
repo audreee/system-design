@@ -5,7 +5,36 @@ const format = require('pg-format');
 
 module.exports = {
   getQuestionsByHelpfulness: (productId, callback) => {
-    let query = format('SELECT * FROM questions WHERE product_id = %L AND reported IS false ORDER BY helpful DESC', productId);
+    let query = format(`SELECT row_to_json(questions) AS question
+    FROM (
+        SELECT
+          questions.*,
+            (
+              SELECT jsonb_agg(nested_answers)
+              FROM (
+                SELECT
+                 answers.*,
+                 (
+                   SELECT json_agg(nested_photos)
+                   FROM (
+                     SELECT
+                     photos.id,
+                     photos.photo
+                     FROM photos
+                     WHERE photos.answer_id = answers.id
+                   ) AS nested_photos
+                 ) AS photos
+                FROM answers
+                WHERE questions.id = answers.question_id
+                AND reported = false
+                ORDER BY helpful DESC
+              ) AS nested_answers
+            ) AS answers
+        FROM questions
+    ) AS questions
+    WHERE product_id = %L
+    AND reported = false
+    ORDER BY helpful DESC`, productId);
     db.query(query, callback);
   },
 
@@ -18,9 +47,6 @@ module.exports = {
     let query = format('SELECT answers.id, question_id, body, date_written, answerer_name, answerer_email, reported, helpful, ARRAY_AGG(photo) as photos FROM answers LEFT JOIN photos ON answers.id = photos.answer_id WHERE reported IS false AND question_id = %L GROUP BY answers.id ORDER BY helpful DESC', questionId);
     db.query(query, callback);
   },
-
-  // 'SELECT answers.id, question_id, body, date_written, answerer_name, answerer_email, reported, helpful, ARRAY_AGG(photo) as photos FROM answers LEFT JOIN photos ON answers.id = photos.answer_id WHERE reported IS false AND answers.id IN (SELECT id FROM answers WHERE question_id = 20012) GROUP BY answers.id ORDER BY helpful DESC'
-
 
   // design combo index first on reported and then on question id
   // design one on first reported and then on answer id

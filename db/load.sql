@@ -30,26 +30,15 @@ WHERE  answers.id = photos.answer_id
 );
 
 -- Create indexes to optimize query execution times:
-CREATE INDEX product_name ON questions (product_id);
+CREATE INDEX product_id ON questions (product_id);
+CREATE INDEX idx_q_reported ON questions USING btree (id, reported)
+
 CREATE INDEX q_id ON answers(question_id);
-CREATE INDEX a_id ON answers(id);
+CREATE INDEX idx_reported_id ON answers (reported, id)
+
 CREATE INDEX p_answer_id ON photos (answer_id);
-
--- ALTER TABLE questions
--- ALTER COLUMN date_written
--- SET DEFAULT current_date;
-
--- ALTER TABLE answers
--- ALTER COLUMN date_written
--- SET DEFAULT current_date;
-
--- ALTER TABLE questions
--- ALTER COLUMN helpful
--- SET DEFAULT 0;
-
--- ALTER TABLE answers
--- ALTER COLUMN helpful
--- SET DEFAULT 0;
+CREATE INDEX p_links ON photos (photo);
+CREATE INDEX p_answer_id ON photos (answer_id);
 
 -- Create sequences to set serial default values for any new, user-added questions and answers
 CREATE SEQUENCE q_seq;
@@ -79,16 +68,18 @@ ALTER TABLE photos ALTER COLUMN id SET DEFAULT nextval('p_seq');
 --         FROM questions ) t
 --         WHERE t.row_num > 1 )
 
--- INDEXES
--- CREATE UNIQUE INDEX answer_id ON public.answers USING btree (id)
--- CREATE INDEX question_id ON public.answers USING btree (question_id)
--- CREATE INDEX idx_reported_id ON public.answers USING btree (reported, id)
--- CREATE UNIQUE INDEX answers_pkey ON public.answers USING btree (id)
+-- ALTER TABLE questions
+-- ALTER COLUMN date_written
+-- SET DEFAULT current_date;
 
--- CREATE UNIQUE INDEX id ON public.questions USING btree (id)
--- CREATE INDEX idx_q_reported ON public.questions USING btree (id, reported)
--- CREATE UNIQUE INDEX questions_pkey ON public.questions USING btree (id)
+-- ALTER TABLE answers
+-- ALTER COLUMN date_written
+-- SET DEFAULT current_date;
 
--- CREATE UNIQUE INDEX photos_id_key ON public.photos USING btree (id)
--- CREATE INDEX p_links ON public.photos USING btree (photo)
--- CREATE INDEX p_answer_id ON photos (answer_id);
+-- ALTER TABLE questions
+-- ALTER COLUMN helpful
+-- SET DEFAULT 0;
+
+-- ALTER TABLE answers
+-- ALTER COLUMN helpful
+-- SET DEFAULT 0;

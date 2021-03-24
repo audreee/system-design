@@ -5,7 +5,7 @@ const db = require('../db/connection.js');
 require('newrelic');
 
 const app = express();
-const port = 3000;
+const port = 3001;
 
 app.use(express.json());
 

@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon server/server.js",
+    "start": "node server/server.js",
     "lint": "./node_modules/.bin/eslint",
     "load-db": "psql -f db/load.sql qa",
     "create-db": "psql -f db/schema.sql qa"

@@ -1,14 +1,42 @@
+CREATE TABLE questions (
+  id INTEGER PRIMARY KEY,
+  product_id INTEGER NOT NULL,
+  body VARCHAR(1000) NOT NULL,
+  date_written DATE NOT NULL DEFAULT current_date,
+  asker_name VARCHAR(60) NOT NULL,
+  asker_email VARCHAR(60) NOT NULL,
+  reported BOOLEAN DEFAULT FALSE,
+  helpful INTEGER NOT NULL DEFAULT 0
+);
+
+CREATE TABLE answers (
+  id INTEGER PRIMARY KEY,
+  question_id INTEGER NOT NULL,
+  body VARCHAR(1000) NOT NULL,
+  date_written DATE NOT NULL DEFAULT current_date,
+  answerer_name VARCHAR(60) NOT NULL,
+  answerer_email VARCHAR(60) NOT NULL,
+  reported BOOLEAN DEFAULT FALSE,
+  helpful INTEGER NOT NULL DEFAULT 0
+);
+
+CREATE TABLE photos (
+  id INTEGER PRIMARY KEY,
+  answer_id INTEGER NOT NULL,
+  photo VARCHAR(200)
+);
+
 -- Load data:
 COPY questions
-FROM '/Users/audreesteinberg/hr/capstone/sdc/questions/data/clean/clean-questions.csv'
+FROM '/data/clean-questions.csv'
 with (FORMAT csv);
 
 COPY answers
-FROM '/Users/audreesteinberg/hr/capstone/sdc/questions/data/clean/clean-answers.csv'
+FROM '/data/clean-answers.csv'
 with (FORMAT csv);
 
 COPY photos
-FROM '/Users/audreesteinberg/hr/capstone/sdc/questions/data/clean/clean-photos.csv'
+FROM '/data/clean-photos.csv'
 with (FORMAT csv);
 
 -- Delete photos that are not tied to existing answers:
@@ -31,10 +59,10 @@ ON DELETE CASCADE;
 
 -- Create indexes to optimize query execution times:
 CREATE INDEX product_id ON questions (product_id);
-CREATE INDEX idx_q_reported ON questions (id, reported);
+CREATE INDEX idx_q_reported ON questions (reported, id);
 
 CREATE INDEX q_id ON answers(question_id);
-CREATE INDEX idx_reported_id ON answers (reported, id)
+CREATE INDEX idx_reported_id ON answers (reported, id);
 
 CREATE INDEX p_answer_id ON photos (answer_id);
 CREATE INDEX p_links ON photos (photo);

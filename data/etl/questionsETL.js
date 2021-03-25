@@ -5,7 +5,7 @@ const path = require('path');
 const validateQuestionsAndAnswers = require('./validateQuestionsAndAnswers.js');
 
 const readStream = fs.createReadStream(path.join(__dirname, '../questions.csv'));
-const writeStream = fs.createWriteStream(path.join(__dirname, '../clean/clean-questions.csv'), { encoding: 'utf8' });
+const writeStream = fs.createWriteStream(path.join(__dirname, '../../db/clean/clean-questions.csv'), { encoding: 'utf8' });
 
 const rl = readline.createInterface({
   input: readStream,

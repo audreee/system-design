@@ -1,6 +1,6 @@
 CREATE TABLE questions (
-  id INTEGER,
-  product_id INTEGER PRIMARY KEY,
+  id INTEGER PRIMARY KEY,
+  product_id INTEGER NOT NULL,
   body VARCHAR(1000) NOT NULL,
   date_written DATE NOT NULL DEFAULT current_date,
   asker_name VARCHAR(60) NOT NULL,
@@ -21,7 +21,7 @@ CREATE TABLE answers (
 );
 
 CREATE TABLE photos (
-  id INTEGER UNIQUE,
+  id INTEGER PRIMARY KEY,
   answer_id INTEGER NOT NULL,
   photo VARCHAR(200)
 );

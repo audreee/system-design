@@ -3,10 +3,10 @@ const { Pool } = require('pg');
 
 const pool = new Pool({
   user: 'audreesteinberg',
-  host: 'host.docker.internal',
+  host: 'db',
   database: 'qa',
   password: '',
-  port: 5432,
+  // port: 5432,
 });
 
 // eslint-disable-next-line no-unused-vars

@@ -7,6 +7,9 @@ const pool = new Pool({
   database: 'qa',
   password: '',
   port: 5432,
+  max: 20,
+  idleTimeoutMillis: 30000,
+  connectionTimeoutMillis: 2000,
 });
 
 // eslint-disable-next-line no-unused-vars

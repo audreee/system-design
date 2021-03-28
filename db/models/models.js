@@ -33,17 +33,32 @@ module.exports = {
     WHERE product_id = %L
     AND reported = false
     ORDER BY helpful DESC`, productId);
-    db.query(query, callback);
+    db.connect((err, client, release) => {
+      client.query(query, (err, result) => {
+        release();
+        callback(err, result);
+      });
+    });
   },
 
   getQuestionsByNewest: (productId, callback) => {
     let query = format('SELECT * FROM questions WHERE product_id = %L AND reported IS false ORDER BY date_written', productId);
-    db.query(query, callback);
+    db.connect((err, client, release) => {
+      client.query(query, (err, result) => {
+        release();
+        callback(err, result);
+      });
+    });
   },
 
   getAnswersByHelpfulness: (questionId, callback) => {
     let query = format('SELECT answers.id, question_id, body, date_written, answerer_name, answerer_email, reported, helpful, ARRAY_AGG(photo) as photos FROM answers LEFT JOIN photos ON answers.id = photos.answer_id WHERE reported IS false AND question_id = %L GROUP BY answers.id ORDER BY helpful DESC', questionId);
-    db.query(query, callback);
+    db.connect((err, client, release) => {
+      client.query(query, (err, result) => {
+        release();
+        callback(err, result);
+      });
+    });
   },
 
   getAnswersByNewest: (questionId, callback) => {
@@ -53,7 +68,12 @@ module.exports = {
 
   addQuestion: (params, callback) => {
     let query = format('INSERT INTO questions (body, asker_name, asker_email, product_id) VALUES (%L, %L, %L, %L)', params[0], params[1], params[2], params[3]);
-    db.query(query, callback);
+    db.connect((err, client, release) => {
+      client.query(query, (err, result) => {
+        release();
+        callback(err, result);
+      });
+    });
   },
 
   addAnswer: (answerInfo, questionId, callback) => {
@@ -100,15 +120,3 @@ module.exports = {
     db.query(query, callback);
   },
 };
-
-// get photos for answers for a given question
-// select photo from photos where answer_id IN (select id from answers WHERE question_id = 1502);
-
-// get all relevant info from photos/answers for all the given answers for a given question
-
-
-// select * from photos where answer_id in (
-// select answer_id from photos
-// group by answer_id having count(*) > 1
-
-// explain analyze SELECT answers.id, question_id, body, date_written, answerer_name, answerer_email, reported, helpful, ARRAY_AGG(photo) as photos FROM answers LEFT JOIN photos ON answers.id = photos.answer_id WHERE answers.id IN (SELECT id FROM answers WHERE question_id = 5 AND reported IS false) GROUP BY answers.id, question_id, body, date_written, answerer_name, answerer_email, reported, helpful ORDER BY helpful DESC

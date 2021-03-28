@@ -1,0 +1,10 @@
+version: "3"
+
+services:
+  questions:
+    image: audreee/sdc_modular
+    ports:
+      - "3001:3001"
+    expose:
+      - '3001'
+

@@ -1,0 +1,29 @@
+version: "3"
+
+services:
+  questions:
+    build: questions/
+    ports:
+      - "3001:3001"
+    expose:
+      - '3001'
+    depends_on: 'db'
+
+  db:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_DB: 'qa'
+      POSTGRES_USER: 'audreesteinberg'
+      POSTGRES_HOST_AUTH_METHOD: 'trust'
+      PGDATA: /var/lib/postgresql/data/files
+    volumes:
+      - /var/lib/postgres/:/var/lib/postgresql/data/pgdata
+      - ./questions/db/clean:/tmp
+    ports:
+      - '5432:5432'
+    expose:
+      - '5432'
+
+volumes:
+  db_data:

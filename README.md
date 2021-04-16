@@ -23,6 +23,7 @@ The back-end API that stores data for the Questions & Answers section of a retai
  - In the first instance, run Docker-Compose file inside pg-image folder or pull latest PostgreSQL docker image (expose port 5432)
  - Use AWS S3 to upload large, cleaned CSV files to a bucket. Transfer files into EC2 Ubuntu host. (Sorry, data isn't shared publicly on github)
  - Use Docker Copy to copy files into first instance running PostgreSQL
+ - Seed database by running init.sql file
  - Pull latest web server image from Dockerhub (audreee/sdc_modular)
  - In the second instance, run the Docker-Compose file inside the server-image folder to spin up a web server container
  - Navigate to port 3000 (or you can redirect traffic by running ```sudo iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 80 -j REDIRECT --to-port 3000```)
